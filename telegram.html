@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gul do'koni</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;500&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 200;
+            color: var(--tg-theme-text-color, #000);
+            background: var(--tg-theme-bg-color, #fff);
+        }
+
+        #main {
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 60px;
+        }
+
+        .product-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .product-name {
+            font-weight: 500;
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+
+        .product-description {
+            font-size: 12px;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .product-price {
+            font-weight: 500;
+            font-size: 16px;
+            color: #e74c3c;
+            margin-bottom: 8px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .quantity-btn {
+            width: 24px;
+            height: 24px;
+            border: 1px solid #ddd;
+            background: #f8f8f8;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity {
+            margin: 0 8px;
+            font-weight: 500;
+            width: 24px;
+            text-align: center;
+        }
+
+        button.add-to-cart {
+            background: var(--tg-theme-button-color, #2481cc);
+            color: var(--tg-theme-button-text-color, #fff);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .cart-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--tg-theme-button-color, #2481cc);
+            color: var(--tg-theme-button-text-color, #fff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #form {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        input {
+            width: 90%;
+            outline: none;
+            margin: 10px 5%;
+            padding: 15px 10px;
+            font-size: 14px;
+            border: 2px solid silver;
+            border-radius: 5px;
+        }
+
+        input:focus {
+            border-color: #db5d5d;
+        }
+        #order{
+            background-color:rgb(80, 153, 231);
+            color: white;
+            width: 90%;
+            height: 40px;
+            border-radius: 5px;
+            border: none;
+            font-size: 18px;
+
+        }
+
+        #cart {
+            display: none;
+            padding: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .cart-total {
+            margin-top: 20px;
+            font-weight: 500;
+            font-size: 18px;
+            text-align: right;
+        }
+
+        .checkout-btn {
+            border: 0;
+            border-radius: 5px;
+            margin-top: 20px;
+            height: 50px;
+            width: 100%;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--tg-theme-button-text-color, #fff);
+            background: var(--tg-theme-button-color, #2481cc);
+        }
+
+        #error {
+            color: #e74c3c;
+            margin: 10px 0;
+        }
+
+        .back-btn {
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .location-note {
+            margin-top: 10px;
+            color: #666;
+            font-style: italic;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <h1>Gul Do'koni</h1>
+        
+        <div class="products-grid">
+            <!-- 1-gul -->
+            <div class="product-container">
+                <img class="product-image" src="images/g1.jpg" alt="Atirgul">
+                <div class="product-name">Atirgul</div>
+                <div class="product-description">Qizil rangda, yangi uzilgan</div>
+                <div class="product-price">15,000 so'm</div>
+                <div class="quantity-controls">
+                    <div class="quantity-btn" onclick="changeQuantity('atirgul', -1)">-</div>
+                    <div id="quantity-atirgul" class="quantity">0</div>
+                    <div class="quantity-btn" onclick="changeQuantity('atirgul', 1)">+</div>
+                </div>
+                <button class="add-to-cart" onclick="addToCart('atirgul', 'Atirgul', 15000)">Savatga qo'shish</button>
+            </div>
+            
+            <!-- 2-gul -->
+            <div class="product-container">
+                <img class="product-image" src="images/g2.jpg" alt="Lola">
+                <div class="product-name">Atirgul</div>
+                <div class="product-description">Rangli buket, nozik</div>
+                <div class="product-price">120,000 so'm</div>
+                <div class="quantity-controls">
+                    <div class="quantity-btn" onclick="changeQuantity('lola', -1)">-</div>
+                    <div id="quantity-lola" class="quantity">0</div>
+                    <div class="quantity-btn" onclick="changeQuantity('lola', 1)">+</div>
+                </div>
+                <button class="add-to-cart" onclick="addToCart('lola', 'Lola', 120000)">Savatga qo'shish</button>
+            </div>
+            
+            <!-- 3-gul -->
+            <div class="product-container">
+                <img class="product-image" src="images/g3.jpg" alt="Tulip">
+                <div class="product-name">Tulip</div>
+                <div class="product-description">buket gul</div>
+                <div class="product-price">18,0000 so'm</div>
+                <div class="quantity-controls">
+                    <div class="quantity-btn" onclick="changeQuantity('tulip', -1)">-</div>
+                    <div id="quantity-tulip" class="quantity">0</div>
+                    <div class="quantity-btn" onclick="changeQuantity('tulip', 1)">+</div>
+                </div>
+                <button class="add-to-cart" onclick="addToCart('tulip', 'Tulip', 180000)">Savatga qo'shish</button>
+            </div>
+            
+            <!-- 4-gul -->
+            <div class="product-container">
+                <img class="product-image" src="images/g4.jpg" alt="Liliya">
+                <div class="product-name">Liliya</div>
+                <div class="product-description">Qizil rangda, xushbo'y gullar</div>
+                <div class="product-price">20,0000 so'm</div>
+                <div class="quantity-controls">
+                    <div class="quantity-btn" onclick="changeQuantity('liliya', -1)">-</div>
+                    <div id="quantity-liliya" class="quantity">0</div>
+                    <div class="quantity-btn" onclick="changeQuantity('liliya', 1)">+</div>
+                </div>
+                <button class="add-to-cart" onclick="addToCart('liliya', 'Liliya', 200000)">Savatga qo'shish</button>
+            </div>
+        </div>
+        
+        <div class="cart-button" onclick="showCart()">
+            🛒
+            <div id="cart-count" class="cart-count">0</div>
+        </div>
+    </div>
+    
+    <div id="cart">
+        <button class="back-btn" onclick="backToMain()">⬅️ Orqaga</button>
+        <h1>Savat</h1>
+        <div id="cart-items"></div>
+        <div id="cart-total" class="cart-total">Jami: 0 so'm</div>
+        <button class="checkout-btn" onclick="showForm()">Buyurtma berish</button>
+    </div>
+    <!-- orqaga -->
+    <form id="form">
+        <button class="back-btn" onclick="backToCart()">⬅️ Orqaga</button>
+        <h1>Ma'lumotlarni to'ldiring</h1>
+        <input type="text" placeholder="Ismingiz" id="user_name">
+        <input type="text" placeholder="Telefon raqamingiz" id="user_phone">
+        <div class="location-note">
+            Ism telifon raqamingizni to'liq kriting.
+        </div>
+        <div id="error"></div>
+        <button id="order" type="button">Buyurtma berish</button>
+    </form>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        let tg = window.Telegram.WebApp;
+        let order = document.getElementById('order');
+        tg.expand();
+        
+      
+        let cart = [];
+        let quantities = {
+            'atirgul': 0,
+            'lola': 0,
+            'tulip': 0,
+            'liliya': 0
+        };
+        
+        function changeQuantity(productId, change) {
+            quantities[productId] = Math.max(0, quantities[productId] + change);
+            document.getElementById(`quantity-${productId}`).innerText = quantities[productId];
+        }
+        
+        function addToCart(productId, productName, price) {
+            const quantity = quantities[productId];
+            if (quantity <= 0) return;
+            
+            // Check if item already in cart
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity = quantity;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: productName,
+                    price: price,
+                    quantity: quantity
+                });
+            }
+            
+            // Reset quantity display
+            quantities[productId] = 0;
+            document.getElementById(`quantity-${productId}`).innerText = 0;
+            
+            // Update cart count
+            updateCartCount();
+        }
+        
+        function updateCartCount() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').innerText = totalItems;
+        }
+        
+        function showCart() {
+            document.getElementById('main').style.display = 'none';
+            document.getElementById('cart').style.display = 'block';
+            
+            // Render cart items
+            const cartItemsContainer = document.getElementById('cart-items');
+            cartItemsContainer.innerHTML = '';
+            
+            let total = 0;
+            
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div>${item.name} x ${item.quantity}</div>
+                    <div>${itemTotal.toLocaleString()} so'm</div>
+                `;
+                cartItemsContainer.appendChild(cartItem);
+            });
+            
+            document.getElementById('cart-total').innerText = `Jami: ${total.toLocaleString()} so'm`;
+        }
+        
+        function backToMain() {
+            document.getElementById('cart').style.display = 'none';
+            document.getElementById('main').style.display = 'block';
+        }
+        
+        function showForm() {
+            if (cart.length === 0) {
+                alert("Savatingiz bo'sh!");
+                return;
+            }
+            
+            document.getElementById('cart').style.display = 'none';
+            document.getElementById('form').style.display = 'block';
+            
+            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                document.getElementById('user_name').value = tg.initDataUnsafe.user.first_name + 
+                    (tg.initDataUnsafe.user.last_name ? " " + tg.initDataUnsafe.user.last_name : "");
+            }
+        }
+        
+        function backToCart() {
+            document.getElementById('form').style.display = 'none';
+            document.getElementById('cart').style.display = 'block';
+        }
+
+        order.addEventListener('click', () => {
+            document.getElementById('error').innerText = '';
+            let name = document.getElementById('user_name').value;
+            let phone = document.getElementById('user_phone').value;
+            
+            if (name.length < 3) {
+                document.getElementById('error').innerText = 'Ism noto\'g\'ri kiritildi';
+                return;
+            }
+            if (phone.length < 9) {
+                document.getElementById('error').innerText = 'Telefon raqam noto\'g\'ri kiritildi';
+                return;
+            }
+
+            let data = {
+                name: name,
+                phone: phone,
+                items: cart,
+                total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+            };
+            
+            tg.sendData(JSON.stringify(data));
+            tg.close();
+        });
+    </script>
+</body>
+</html>
