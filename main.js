@@ -3,11 +3,13 @@ const TelegramBot = require('node-telegram-bot-api');
 const registerLocationHandlers = require('./location_handlers');
 const { registerDeliveryHandlers } = require('./delivery_handlers'); // Faqat funksiyani import qilish
 const registerPaymentHandlers = require('./payment_handlers');
+const {config} = require("dotenv")
 
+config()
 // --- Global Variables ---
-const TOKEN = '8057214490:AAE94rTihDbBRrwqCeoYHwkolRsKh3GDMgs'; // Bot tokeningizni qo'ying
+const TOKEN = process.env.BOT_TOKEN; // Bot tokeningizni qo'ying
 const WEB_APP_URL = 'https://charming-cucurucho-1c5f99.netlify.app/telegram.html'; // Web App URL
-const ADMIN_CHAT_ID = 1205534758; // Admin ID raqamingiz
+const ADMIN_CHAT_ID = process.env.ADMIN_CHAT_ID; // Admin ID raqamingiz
 
 // --- Data Storage ---
 const userData = {};       // User-specific data (orders, name, phone, location, etc.)
